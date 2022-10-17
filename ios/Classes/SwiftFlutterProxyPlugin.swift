@@ -26,8 +26,15 @@ public class SwiftFlutterProxyPlugin: NSObject, FlutterPlugin {
         }
         let proxies = CFNetworkCopyProxiesForURL((url as CFURL), proxySettings).takeUnretainedValue() as NSArray
         guard let settings = proxies.firstObject as? NSDictionary,
-            let _ = settings.object(forKey: (kCFProxyTypeKey as String)) as? String else {
+            let typeKey = settings.object(forKey: (kCFProxyTypeKey as String)) as? String else {
                 return nil
+        }
+
+        if typeKey == kCFProxyTypeAutoConfigurationURL {
+            if let hostName = settings.object(forKey: (kCFProxyAutoConfigurationURLKey as String)) {
+                return ["host":hostName]
+            }
+            return nil;
         }
 
         if let hostName = settings.object(forKey: (kCFProxyHostNameKey as String)), let port = settings.object(forKey: (kCFProxyPortNumberKey as String)) {
