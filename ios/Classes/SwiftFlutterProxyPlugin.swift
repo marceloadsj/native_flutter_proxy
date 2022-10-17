@@ -30,7 +30,7 @@ public class SwiftFlutterProxyPlugin: NSObject, FlutterPlugin {
                 return nil
         }
 
-        if typeKey == kCFProxyTypeAutoConfigurationURL {
+        if typeKey == (kCFProxyTypeAutoConfigurationURL as String) {
             if let hostName = settings.object(forKey: (kCFProxyAutoConfigurationURLKey as String)) {
                 return ["host":hostName]
             }
